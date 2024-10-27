@@ -22,8 +22,8 @@ export const PeopleTable: React.FC = () => {
       </thead>
 
       <tbody>
-        {people.map((personItem, index) => {
-          return <PersonLink key={index} person={personItem} />;
+        {people.map(personItem => {
+          return <PersonLink key={personItem.slug} person={personItem} />;
         })}
       </tbody>
     </table>

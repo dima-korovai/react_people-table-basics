@@ -7,13 +7,12 @@ import { PeopleTable } from '../components/PeopleTable';
 export const People: React.FC = () => {
   const { people, setPeopleLoader, setPeople, peopleLoader } =
     useContext(PeopleContext);
-  const [hidePeople, setHidePeople] = useState(true);
+  // const [hidePeople, setHidePeople] = useState(true);
   const [errorMessage, setErrorMessage] = useState<string>('');
 
   useEffect(() => {
     setErrorMessage('');
     setPeopleLoader(true);
-    setHidePeople(false);
     getPeople()
       .then(setPeople)
       .catch(() => {
@@ -36,25 +35,23 @@ export const People: React.FC = () => {
     <>
       <h1 className="title">People Page</h1>
 
-      {errorMessage && (
-        <p data-cy="peopleLoadingError" className="has-text-danger">
-          {errorMessage}
-        </p>
-      )}
+      <div className="block">
+        <div className="box table-container">
+          {!peopleLoader && errorMessage && (
+            <p data-cy="peopleLoadingError" className="has-text-danger">
+              {errorMessage}
+            </p>
+          )}
 
-      {peopleLoader && <Loader />}
+          {peopleLoader && <Loader />}
 
-      {!people.length && !hidePeople && !peopleLoader && (
-        <p data-cy="noPeopleMessage">There are no people on the server</p>
-      )}
+          {!people.length && !peopleLoader && (
+            <p data-cy="noPeopleMessage">There are no people on the server</p>
+          )}
 
-      {!!people.length && !peopleLoader && !hidePeople && (
-        <div className="block">
-          <div className="box table-container">
-            <PeopleTable />
-          </div>
+          {!!people.length && !peopleLoader && <PeopleTable />}
         </div>
-      )}
+      </div>
     </>
   );
 };

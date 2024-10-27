@@ -1,44 +1,34 @@
 import { useContext } from 'react';
 import { PeopleContext } from '../store/PeopleContent';
 
-export function GetPersonDates(personName: string | null, parent: string) {
+function ExtractDates(name: string | null) {
   const { people } = useContext(PeopleContext);
+  const parentOfKid = people.find(personEl => personEl.name === name);
 
-  if (parent === 'mother') {
-    const motherOfKid = people.find(personEl => personEl.name === personName);
+  if (!parentOfKid) {
+    return undefined;
+  }
 
-    if (!motherOfKid) {
+  const parentBirthDate = parentOfKid?.born;
+
+  const parentNameDivided = parentOfKid?.name
+    .split(' ')
+    .join('-')
+    .toLowerCase();
+
+  const parentDates = parentNameDivided + '-' + parentBirthDate;
+
+  return parentDates;
+}
+
+export function GetPersonDates(personName: string | null, parent: string) {
+  switch (parent) {
+    case 'mother':
+      return ExtractDates(personName);
+    case 'father':
+      return ExtractDates(personName);
+
+    default:
       return;
-    }
-
-    const motherBirthDate = motherOfKid?.born;
-
-    const motherNameDivided = motherOfKid?.name
-      .split(' ')
-      .join('-')
-      .toLowerCase();
-
-    const motherDates = motherNameDivided + '-' + motherBirthDate;
-
-    return motherDates;
-  } else if (parent === 'father') {
-    const fatherOfKid = people.find(personEl => personEl.name === personName);
-
-    if (!fatherOfKid) {
-      return;
-    }
-
-    const fatherBirthDate = fatherOfKid?.born;
-
-    const fatherNameDivided = fatherOfKid?.name
-      .split(' ')
-      .join('-')
-      .toLowerCase();
-
-    const fatherDates = fatherNameDivided + '-' + fatherBirthDate;
-
-    return fatherDates;
-  } else {
-    return;
   }
 }
